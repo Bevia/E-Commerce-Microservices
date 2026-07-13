@@ -6,7 +6,7 @@ A complete JWT-authenticated microservices system for e-commerce, built with Spr
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              CLIENT APPLICATION                              │
+│                              CLIENT APPLICATION                             │
 │                        (Web App, Mobile App, etc.)                          │
 └─────────────────────────────────────────────────────────────────────────────┘
                                       │
@@ -14,24 +14,24 @@ A complete JWT-authenticated microservices system for e-commerce, built with Spr
                                       ▼
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                                                                             │
-│  ┌───────────────┐    ┌───────────────┐    ┌───────────────┐               │
-│  │               │    │               │    │               │               │
-│  │  AUTH SERVICE │    │ ORDER SERVICE │    │PAYMENT SERVICE│               │
-│  │    :8083      │    │    :8080      │    │    :8081      │               │
-│  │               │    │               │    │               │               │
-│  │  • Signup     │    │  • Create     │    │  • Process    │               │
-│  │  • Signin     │    │  • List       │    │  • List       │               │
-│  │  • JWT Issue  │    │  • Update     │    │  • Status     │               │
-│  │               │    │               │    │               │               │
-│  └───────┬───────┘    └───────┬───────┘    └───────┬───────┘               │
+│  ┌───────────────┐    ┌───────────────┐    ┌───────────────┐                │
+│  │               │    │               │    │               │                │
+│  │  AUTH SERVICE │    │ ORDER SERVICE │    │PAYMENT SERVICE│                │
+│  │    :8083      │    │    :8080      │    │    :8081      │                │
+│  │               │    │               │    │               │                │
+│  │  • Signup     │    │  • Create     │    │  • Process    │                │
+│  │  • Signin     │    │  • List       │    │  • List       │                │
+│  │  • JWT Issue  │    │  • Update     │    │  • Status     │                │
+│  │               │    │               │    │               │                │
+│  └───────┬───────┘    └───────┬───────┘    └───────┬───────┘                │
 │          │                    │                    │                        │
 │          ▼                    ▼                    ▼                        │
-│  ┌───────────────┐    ┌───────────────┐    ┌───────────────┐               │
-│  │   H2: authdb  │    │  H2: orderdb  │    │ H2: paymentdb │               │
-│  │               │    │               │    │               │               │
-│  │  • Users      │    │  • Orders     │    │  • Payments   │               │
-│  │  • Roles      │    │  • OrderItems │    │               │               │
-│  └───────────────┘    └───────────────┘    └───────────────┘               │
+│  ┌───────────────┐    ┌───────────────┐    ┌───────────────┐                │
+│  │   H2: authdb  │    │  H2: orderdb  │    │ H2: paymentdb │                │
+│  │               │    │               │    │               │                │
+│  │  • Users      │    │  • Orders     │    │  • Payments   │                │
+│  │  • Roles      │    │  • OrderItems │    │               │                │
+│  └───────────────┘    └───────────────┘    └───────────────┘                │
 │                                                                             │
 │                    SHARED JWT SECRET (Base64 Encoded)                       │
 └─────────────────────────────────────────────────────────────────────────────┘
