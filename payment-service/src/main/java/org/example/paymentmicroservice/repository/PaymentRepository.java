@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    // You can add custom query methods if needed, e.g.:
-    Optional<Payment> findByOrderId(String orderId);
+    Optional<Payment> findFirstByOrderIdOrderByIdDesc(String orderId);
     List<Payment> findByStatus(String status);
 }
