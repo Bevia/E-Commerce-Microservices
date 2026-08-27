@@ -21,6 +21,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/h2-console/**").permitAll() // Allow H2 console for dev
+                                .requestMatchers("/actuator/health/**").permitAll() // Allow platform health probes
                                 .anyRequest().authenticated() // All other requests require valid JWT
                 );
 

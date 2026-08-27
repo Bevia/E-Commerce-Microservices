@@ -58,6 +58,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll() // Allow access to auth endpoints
                                 .requestMatchers("/h2-console/**").permitAll() // Allow h2-console for dev
+                                .requestMatchers("/actuator/health/**").permitAll() // Allow platform health probes
                                 .anyRequest().authenticated() // All other requests require authentication
                 );
 

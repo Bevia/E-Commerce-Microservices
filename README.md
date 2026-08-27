@@ -2,6 +2,10 @@
 
 A complete JWT-authenticated microservices system for e-commerce, built with Spring Boot 3.5 and Java 17.
 
+## Container deployment
+
+The repository now includes one multi-stage Dockerfile per service, a root `compose.yaml`, and Kubernetes manifests under `k8s/`. See [Docker and Kubernetes guide](DOCKER_KUBERNETES.md) for the complete build, run, deployment, and troubleshooting workflow.
+
 ## 🏗️ Architecture Overview
 
 ```
