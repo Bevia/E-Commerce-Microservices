@@ -10,9 +10,9 @@ The requests below exercise the system as it exists today. Payment processing is
 
 Validation status on 27 August 2026:
 
-- Health, signup, sign-in, order creation, order update, order deletion, every payment endpoint, authorization rejection, and cleanup passed against the running Docker containers.
-- The three order read operations fail after an order exists: list all orders, get an order by identifier, and list orders by user. The application log reports `HttpMessageNotWritableException` because the lazy `orderItems` collection is serialized after its database session has closed. The external response appears as `403 Forbidden` because Spring Security protects the subsequent `/error` dispatch.
-- The order read assertions below intentionally retain the correct expected result, `200 OK`. They therefore expose the known defect and will turn green when the application is fixed.
+- Health, signup, sign-in, all order endpoints, all payment endpoints, authorization rejection, and cleanup passed against the running Docker containers.
+- Order reads return explicit response Data Transfer Objects (DTOs). Their `orderItems` are fetched and mapped while the database transaction is active, so they remain serializable when Open Session in View is disabled.
+- Payment lookup by order identifier returns the newest payment attempt when retries have created more than one payment row for the same order.
 
 ## 1. Prerequisites
 
@@ -256,8 +256,6 @@ pm.test("Order list contains the new order", function () {
 });
 ```
 
-**Known current result:** `403 Forbidden`, masking a lazy-loading serialization error. The correct behavior asserted by the test is `200 OK`.
-
 ### 6.3 Get the order by identifier
 
 ```text
@@ -275,8 +273,6 @@ pm.test("Correct order is returned", function () {
     pm.expect(response.status).to.eql("PENDING");
 });
 ```
-
-**Known current result:** `403 Forbidden`, masking a lazy-loading serialization error. The correct behavior asserted by the test is `200 OK`.
 
 ### 6.4 List orders by user
 
@@ -296,8 +292,6 @@ pm.test("User order list contains the new order", function () {
     pm.expect(orders.some(order => order.id === orderId)).to.be.true;
 });
 ```
-
-**Known current result:** `403 Forbidden`, masking a lazy-loading serialization error. The correct behavior asserted by the test is `200 OK`.
 
 ## 7. Payment flow
 
@@ -463,8 +457,6 @@ pm.test("Final order state is PAID", function () {
 });
 ```
 
-This verification currently encounters the same known order-read serialization defect and returns `403 Forbidden`. The preceding update response itself correctly reports `PAID`.
-
 ## 9. Security test
 
 Duplicate the `GET {{orderBaseUrl}}/api/orders/{{orderId}}` request, change Authorization to **No Auth**, and send it.
@@ -600,12 +592,6 @@ Each service currently uses an H2 in-memory database. Recreating or removing a c
 
 This is expected in the current implementation. Payment and order status are not automatically synchronized. Run the manual `PUT /api/orders/{id}/status?status=PAID` request, or implement the future synchronous or event-driven integration.
 
-### Authenticated order `GET` requests return `403 Forbidden`
+### Authenticated requests return `403 Forbidden`
 
-This is a known application defect, not an invalid token. The container log shows that Jackson cannot serialize the lazy `orderItems` collection after the Hibernate database session has closed:
-
-```text
-HttpMessageNotWritableException: failed to lazily initialize a collection of role: Order.orderItems
-```
-
-The recommended fix is to return explicit response Data Transfer Objects rather than serializing persistence entities directly. Other possibilities include fetching `orderItems` explicitly for the read use case or changing transaction boundaries. Enabling Open Session in View can hide the symptom but is not the preferred production design.
+Run sign-in again and confirm that the request inherits the collection's Bearer Token authorization. Order tokens expire after one hour. If a fresh token still fails, inspect the relevant service log for the underlying application exception.
