@@ -59,6 +59,7 @@ public class WebSecurityConfig {
                         auth.requestMatchers("/api/auth/**").permitAll() // Allow access to auth endpoints
                                 .requestMatchers("/h2-console/**").permitAll() // Allow h2-console for dev
                                 .requestMatchers("/actuator/health/**").permitAll() // Allow platform health probes
+                                .requestMatchers("/actuator/prometheus").permitAll() // Internal metrics scraping
                                 .anyRequest().authenticated() // All other requests require authentication
                 );
 
