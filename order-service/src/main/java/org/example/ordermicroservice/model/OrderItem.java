@@ -20,7 +20,6 @@ public class OrderItem {
     private String productId; // ID of the product from a (future) Product Service
     private String productName; // Denormalized for convenience
     private Integer quantity;
-    @Column(precision = 19, scale = 2)
     private BigDecimal priceAtTimeOfPurchase; // Price at the moment of order creation
 
     @ManyToOne(fetch = FetchType.LAZY)

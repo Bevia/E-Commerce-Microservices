@@ -25,7 +25,6 @@ public class Order {
     private String username; // Username from JWT token
     private LocalDateTime orderDate;
     private String status; // e.g., "PENDING", "PAID", "SHIPPED", "CANCELLED"
-    @Column(precision = 19, scale = 2)
     private BigDecimal totalAmount;
     private Long paymentId; // Reference to the Payment ID from the Payment Service
 

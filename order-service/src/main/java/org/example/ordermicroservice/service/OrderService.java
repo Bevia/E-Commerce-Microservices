@@ -3,14 +3,11 @@ package org.example.ordermicroservice.service;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.ordermicroservice.dto.OrderResponse;
 import org.example.ordermicroservice.model.Order;
 import org.example.ordermicroservice.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -27,33 +24,22 @@ public class OrderService {
     private final WebClient webClient; // For calling other microservices
 
     @Autowired
-    public OrderService(
-            OrderRepository orderRepository,
-            WebClient.Builder webClientBuilder,
-            @Value("${payment.service.base-url:http://localhost:8081}") String paymentServiceBaseUrl
-    ) {
+    public OrderService(OrderRepository orderRepository, WebClient.Builder webClientBuilder) {
         this.orderRepository = orderRepository;
-        this.webClient = webClientBuilder.baseUrl(paymentServiceBaseUrl).build();
+        // Build WebClient pointing to your Payment Service
+        this.webClient = webClientBuilder.baseUrl("http://localhost:8081").build();
     }
 
-    @Transactional(readOnly = true)
-    public List<OrderResponse> getAllOrders() {
-        return orderRepository.findAll().stream()
-                .map(OrderResponse::from)
-                .toList();
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public Optional<OrderResponse> getOrderById(Long id) {
-        return orderRepository.findById(id)
-                .map(OrderResponse::from);
+    public Optional<Order> getOrderById(Long id) {
+        return orderRepository.findById(id);
     }
 
-    @Transactional(readOnly = true)
-    public List<OrderResponse> getOrdersByUserId(Long userId) {
-        return orderRepository.findByUserId(userId).stream()
-                .map(OrderResponse::from)
-                .toList();
+    public List<Order> getOrdersByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 
     public Order createOrder(Order order) {
@@ -106,12 +92,11 @@ public class OrderService {
         return orderRepository.save(savedOrder); // Save updated status
     }
 
-    @Transactional
-    public OrderResponse updateOrderStatus(Long orderId, String newStatus) {
+    public Order updateOrderStatus(Long orderId, String newStatus) {
         return orderRepository.findById(orderId)
                 .map(order -> {
                     order.setStatus(newStatus);
-                    return OrderResponse.from(orderRepository.save(order));
+                    return orderRepository.save(order);
                 })
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
     }
@@ -120,13 +105,8 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-    public boolean orderExists(Long id) {
-        return orderRepository.existsById(id);
-    }
-
-    @Transactional
-    public OrderResponse saveOrder(Order order) {
-        return OrderResponse.from(orderRepository.save(order));
+    public Order saveOrder(Order order) {
+        return orderRepository.save(order);
     }
 
     // --- DTOs for Payment Service Communication ---
