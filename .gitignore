@@ -1,2 +1,5 @@
 # Local-only analysis / notes — never pushed
 ARCHITECTURE_ANALYSIS.md
+
+# Local production secrets
+.env.production

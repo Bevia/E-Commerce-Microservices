@@ -1,6 +1,7 @@
 package org.example.paymentmicroservice.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,6 +22,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String orderId; // Reference to an order in another service
+    @Column(precision = 19, scale = 2)
     private BigDecimal amount;
     private String currency;
     private String paymentMethod; // e.g., "Credit Card", "PayPal"
