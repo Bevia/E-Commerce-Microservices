@@ -68,17 +68,19 @@ A complete JWT-authenticated microservices system for e-commerce, built with Spr
 
 **Purpose:** User registration, authentication, and JWT token issuance.
 
-| Endpoint | Method | Description | Auth Required |
-|----------|--------|-------------|---------------|
-| `/api/auth/signup` | POST | Register new user | No |
-| `/api/auth/signin` | POST | Login & get JWT | No |
+| Endpoint           | Method | Description       | Auth Required |
+| ------------------ | ------ | ----------------- | ------------- |
+| `/api/auth/signup` | POST   | Register new user | No            |
+| `/api/auth/signin` | POST   | Login & get JWT   | No            |
 
 **Database Tables:**
+
 - `USERS` - User accounts (id, username, email, password_hash)
 - `ROLES` - Available roles (ROLE_USER, ROLE_MODERATOR, ROLE_ADMIN)
 - `USER_ROLES` - User-role assignments
 
 **Key Features:**
+
 - BCrypt password hashing
 - JWT token generation (1-hour expiry)
 - Role-based user registration
@@ -89,20 +91,22 @@ A complete JWT-authenticated microservices system for e-commerce, built with Spr
 
 **Purpose:** Manage customer orders with user tracking.
 
-| Endpoint | Method | Description | Auth Required |
-|----------|--------|-------------|---------------|
-| `/api/orders` | GET | List all orders | ✅ Yes |
-| `/api/orders` | POST | Create new order | ✅ Yes |
-| `/api/orders/{id}` | GET | Get order by ID | ✅ Yes |
-| `/api/orders/user/{userId}` | GET | Get orders by user | ✅ Yes |
-| `/api/orders/{id}/status` | PUT | Update order status | ✅ Yes |
-| `/api/orders/{id}` | DELETE | Delete order | ✅ Yes |
+| Endpoint                    | Method | Description         | Auth Required |
+| --------------------------- | ------ | ------------------- | ------------- |
+| `/api/orders`               | GET    | List all orders     | ✅ Yes        |
+| `/api/orders`               | POST   | Create new order    | ✅ Yes        |
+| `/api/orders/{id}`          | GET    | Get order by ID     | ✅ Yes        |
+| `/api/orders/user/{userId}` | GET    | Get orders by user  | ✅ Yes        |
+| `/api/orders/{id}/status`   | PUT    | Update order status | ✅ Yes        |
+| `/api/orders/{id}`          | DELETE | Delete order        | ✅ Yes        |
 
 **Database Tables:**
+
 - `ORDERS` - Orders with username from JWT token
 - `ORDER_ITEM` - Individual items in orders
 
 **Key Features:**
+
 - Extracts username from JWT automatically
 - Links orders to authenticated user
 - Stateless JWT validation
@@ -113,16 +117,18 @@ A complete JWT-authenticated microservices system for e-commerce, built with Spr
 
 **Purpose:** Process and track payments for orders.
 
-| Endpoint | Method | Description | Auth Required |
-|----------|--------|-------------|---------------|
-| `/api/payments` | GET | List all payments | ✅ Yes |
-| `/api/payments/process` | POST | Process payment | ✅ Yes |
-| `/api/payments/{id}` | GET | Get payment by ID | ✅ Yes |
+| Endpoint                | Method | Description       | Auth Required |
+| ----------------------- | ------ | ----------------- | ------------- |
+| `/api/payments`         | GET    | List all payments | ✅ Yes        |
+| `/api/payments/process` | POST   | Process payment   | ✅ Yes        |
+| `/api/payments/{id}`    | GET    | Get payment by ID | ✅ Yes        |
 
 **Database Tables:**
+
 - `PAYMENT` - Payment records with transaction IDs
 
 **Key Features:**
+
 - Generates unique transaction IDs
 - Links payments to order IDs
 - Supports multiple payment methods
@@ -137,15 +143,16 @@ A complete JWT-authenticated microservices system for e-commerce, built with Spr
     "alg": "HS256"
   },
   "payload": {
-    "sub": "username",     // Subject = username
-    "iat": 1764937069,     // Issued at
-    "exp": 1764940669      // Expiration (1 hour)
+    "sub": "username", // Subject = username
+    "iat": 1764937069, // Issued at
+    "exp": 1764940669 // Expiration (1 hour)
   },
   "signature": "..." // HMAC-SHA256 signed
 }
 ```
 
 **Shared Secret (Base64):**
+
 ```
 WW91clN1cGVyU2VjcmV0S2V5Rm9ySldUQXV0aGVudGljYXRpb25XaGljaFNob3VsZEJlVmVyeUxvbmdBbmRDb21wbGV4
 ```
@@ -159,21 +166,25 @@ All services share this secret to validate tokens independently (stateless).
 ### 1. Start All Services
 
 **Terminal 1 - Auth Service:**
+
 ```bash
 cd /Users/vincentbevia/IdeaProjects/AuthMicroservice && ./mvnw spring-boot:run
 ```
 
 **Terminal 2 - Order Service:**
+
 ```bash
 cd /Users/vincentbevia/IdeaProjects/OrderMicroservice && ./mvnw spring-boot:run
 ```
 
 **Terminal 3 - Payment Service:**
+
 ```bash
 cd /Users/vincentbevia/IdeaProjects/PaymentMicroservice && ./mvnw spring-boot:run
 ```
 
 ### 2. Register a User
+
 ```bash
 curl -X POST http://localhost:8083/api/auth/signup \
   -H "Content-Type: application/json" \
@@ -181,6 +192,7 @@ curl -X POST http://localhost:8083/api/auth/signup \
 ```
 
 ### 3. Login & Get Token
+
 ```bash
 curl -X POST http://localhost:8083/api/auth/signin \
   -H "Content-Type: application/json" \
@@ -188,6 +200,7 @@ curl -X POST http://localhost:8083/api/auth/signin \
 ```
 
 Response:
+
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiJ9...",
@@ -198,6 +211,7 @@ Response:
 ```
 
 ### 4. Create an Order
+
 ```bash
 curl -X POST http://localhost:8080/api/orders \
   -H "Content-Type: application/json" \
@@ -206,6 +220,7 @@ curl -X POST http://localhost:8080/api/orders \
 ```
 
 ### 5. Process Payment
+
 ```bash
 curl -X POST http://localhost:8081/api/payments/process \
   -H "Content-Type: application/json" \
@@ -217,19 +232,20 @@ curl -X POST http://localhost:8081/api/payments/process \
 
 ## 🗄️ H2 Database Consoles
 
-| Service | Console URL | JDBC URL | User | Password |
-|---------|-------------|----------|------|----------|
-| Auth | http://localhost:8083/h2-console | `jdbc:h2:mem:authdb` | sa | password |
-| Order | http://localhost:8080/h2-console | `jdbc:h2:mem:orderdb` | sa | password |
-| Payment | http://localhost:8081/h2-console | `jdbc:h2:mem:paymentdb` | sa | password |
+| Service | Console URL                      | JDBC URL                | User | Password |
+| ------- | -------------------------------- | ----------------------- | ---- | -------- |
+| Auth    | http://localhost:8083/h2-console | `jdbc:h2:mem:authdb`    | sa   | password |
+| Order   | http://localhost:8080/h2-console | `jdbc:h2:mem:orderdb`   | sa   | password |
+| Payment | http://localhost:8081/h2-console | `jdbc:h2:mem:paymentdb` | sa   | password |
 
 **Useful Queries:**
+
 ```sql
 -- Auth DB
 SELECT * FROM USERS;
 SELECT * FROM ROLES;
-SELECT u.USERNAME, r.NAME as ROLE FROM USERS u 
-  JOIN USER_ROLES ur ON u.ID = ur.USER_ID 
+SELECT u.USERNAME, r.NAME as ROLE FROM USERS u
+  JOIN USER_ROLES ur ON u.ID = ur.USER_ID
   JOIN ROLES r ON ur.ROLE_ID = r.ID;
 
 -- Order DB
@@ -244,16 +260,16 @@ SELECT * FROM PAYMENT;
 
 ## 🛠️ Technology Stack
 
-| Component | Technology |
-|-----------|------------|
-| Framework | Spring Boot 3.5.0 |
-| Language | Java 17 |
-| Security | Spring Security + JWT |
-| JWT Library | JJWT 0.12.5 |
-| Database | H2 (in-memory) |
-| ORM | Spring Data JPA |
-| Build Tool | Maven |
-| Password Hashing | BCrypt |
+| Component        | Technology            |
+| ---------------- | --------------------- |
+| Framework        | Spring Boot 3.5.0     |
+| Language         | Java 17               |
+| Security         | Spring Security + JWT |
+| JWT Library      | JJWT 0.12.5           |
+| Database         | H2 (in-memory)        |
+| ORM              | Spring Data JPA       |
+| Build Tool       | Maven                 |
+| Password Hashing | BCrypt                |
 
 ---
 
@@ -298,20 +314,21 @@ Each service has identical security setup:
 @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
-        .sessionManagement(session -> 
+        .sessionManagement(session ->
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/h2-console/**").permitAll()
             .anyRequest().authenticated());
-    
-    http.addFilterBefore(jwtAuthFilter, 
+
+    http.addFilterBefore(jwtAuthFilter,
         UsernamePasswordAuthenticationFilter.class);
-    
+
     return http.build();
 }
 ```
 
 **Key Points:**
+
 - CSRF disabled (stateless JWT)
 - No sessions (STATELESS policy)
 - JWT filter validates every request
@@ -353,4 +370,8 @@ MIT License - Feel free to use and modify!
 
 ---
 
-*Built with ❤️ using Spring Boot and JWT Authentication*
+_Built with ❤️ using Spring Boot and JWT Authentication_
+
+---
+
+/anthropic-skills:docs @
