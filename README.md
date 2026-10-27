@@ -178,19 +178,19 @@ All services share this secret to validate tokens independently (stateless).
 **Terminal 1 - Auth Service:**
 
 ```bash
-cd /Users/vincentbevia/IdeaProjects/AuthMicroservice && ./mvnw spring-boot:run
+cd /Users/vincentbevia/IdeaProjects/E-Commerce-Microservices/auth-service && ./mvnw spring-boot:run
 ```
 
 **Terminal 2 - Order Service:**
 
 ```bash
-cd /Users/vincentbevia/IdeaProjects/OrderMicroservice && ./mvnw spring-boot:run
+cd /Users/vincentbevia/IdeaProjects/E-Commerce-Microservices/order-service && ./mvnw spring-boot:run
 ```
 
 **Terminal 3 - Payment Service:**
 
 ```bash
-cd /Users/vincentbevia/IdeaProjects/PaymentMicroservice && ./mvnw spring-boot:run
+cd /Users/vincentbevia/IdeaProjects/E-Commerce-Microservices/payment-service && ./mvnw spring-boot:run
 ```
 
 ### 2. Register a User

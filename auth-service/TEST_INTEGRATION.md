@@ -1,11 +1,11 @@
 # Terminal 1: Start Auth service
-cd /Users/vincentbevia/IdeaProjects/AuthMicroservice && ./mvnw spring-boot:run
+cd /Users/vincentbevia/IdeaProjects/E-Commerce-Microservices/auth-service && ./mvnw spring-boot:run
 
 # Terminal 2: Start Order service  
-cd /Users/vincentbevia/IdeaProjects/OrderMicroservice && ./mvnw spring-boot:run
+cd /Users/vincentbevia/IdeaProjects/E-Commerce-Microservices/order-service && ./mvnw spring-boot:run
 
 # Terminal 3: Start Payment service
-cd /Users/vincentbevia/IdeaProjects/PaymentMicroservice && ./mvnw spring-boot:run
+cd /Users/vincentbevia/IdeaProjects/E-Commerce-Microservices/payment-service && ./mvnw spring-boot:run
 
 # Terminal 4: Test the flow
 # 1. Register user (if not already done)
@@ -43,7 +43,7 @@ code /Users/vincentbevia/IdeaProjects/E-Commerce-Microservices.code-workspace
 
 ## Remember to start service:
 # Terminal for Order service
-cd /Users/vincentbevia/IdeaProjects/OrderMicroservice && ./mvnw spring-boot:run
+cd /Users/vincentbevia/IdeaProjects/E-Commerce-Microservices/order-service && ./mvnw spring-boot:run
 
 # Terminal for Payment service
-cd /Users/vincentbevia/IdeaProjects/PaymentMicroservice && ./mvnw spring-boot:run
+cd /Users/vincentbevia/IdeaProjects/E-Commerce-Microservices/payment-service && ./mvnw spring-boot:run

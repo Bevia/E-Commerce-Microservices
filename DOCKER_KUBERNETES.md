@@ -20,6 +20,8 @@ docker compose up -d
 docker compose ps
 ```
 
+If `docker` is not found, ports clash with a local `./mvnw` run, or the containers don't appear in Docker Desktop, see [Troubleshooting in RUNNING.md](RUNNING.md#troubleshooting).
+
 The three containers share the Compose `backend` network. Containers can resolve one another using the service names `auth-service`, `order-service`, and `payment-service`.
 
 The host endpoints remain:
