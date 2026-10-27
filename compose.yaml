@@ -1,0 +1,59 @@
+name: ecommerce-microservices
+
+x-service-defaults: &service-defaults
+  init: true
+  restart: unless-stopped
+  environment:
+    JWT_SECRET: ${JWT_SECRET:-WW91clN1cGVyU2VjcmV0S2V5Rm9ySldUQXV0aGVudGljYXRpb25XaGljaFNob3VsZEJlVmVyeUxvbmdBbmRDb21wbGV4}
+    DEBUG: "false"
+    SPRING_JPA_SHOW_SQL: "false"
+    SPRING_JPA_OPEN_IN_VIEW: "false"
+  networks:
+    - backend
+
+services:
+  auth-service:
+    <<: *service-defaults
+    image: ecommerce/auth-service:local
+    build:
+      context: ./auth-service
+    ports:
+      - "8083:8083"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8083/actuator/health/readiness"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+
+  order-service:
+    <<: *service-defaults
+    image: ecommerce/order-service:local
+    build:
+      context: ./order-service
+    ports:
+      - "8090:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/actuator/health/readiness"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+
+  payment-service:
+    <<: *service-defaults
+    image: ecommerce/payment-service:local
+    build:
+      context: ./payment-service
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8081/actuator/health/readiness"]
+      interval: 10s
+      timeout: 3s
+      retries: 6
+      start_period: 20s
+
+networks:
+  backend:
+    driver: bridge

@@ -48,6 +48,6 @@ public class PaymentService {
     }
 
     public Optional<Payment> getPaymentByOrderId(String orderId) {
-        return paymentRepository.findByOrderId(orderId);
+        return paymentRepository.findFirstByOrderIdOrderByIdDesc(orderId);
     }
 }
